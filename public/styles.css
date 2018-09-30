@@ -1,0 +1,38 @@
+/* General styles */
+
+input {
+    margin-bottom: 0;
+}
+
+label {
+    margin-top: 1.5rem;
+}
+
+.delete-button {
+    font-size: 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.validation-message {
+    color: red;
+    font-size: 1.4rem;
+}
+
+
+/* Header styles */
+
+.header__logo {
+    margin-bottom: 0;
+}
+
+.header__nav {
+    display: flex;
+    align-items: center;
+}
+
+.header__nav-item {
+    margin-left: 20px;
+}

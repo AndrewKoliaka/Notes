@@ -1,0 +1,60 @@
+<section class="row">
+    <div class="column column-50 column-offset-25">
+        <h2 class="text-center">Sign up</h2>
+        <form action="#" name="signUpForm">
+
+            <label for="name">
+                Username:
+                <input type="text"
+                    id="name"
+                    name="username"
+                    data-ng-model="notesScope.auth.name"
+                    data-ng-minlength="3"
+                    data-ng-maxlength="25">
+            </label>
+            <span class="validation-message"
+                data-ng-show="signUpForm.username.$invalid">invlid username</span>
+
+            <label for="email">
+                Email: *
+                <input type="email"
+                    id="email"
+                    name="email"
+                    data-ng-model="notesScope.auth.email"
+                    data-ng-required="notesScope.auth.email">
+            </label>
+            <span class="validation-message"
+                data-ng-show="signUpForm.email.$invalid && signUpForm.email.$dirty">invlid email</span>
+
+            <label for="password">
+                Password: *
+                <input type="password"
+                    id="password"
+                    name="password"
+                    data-ng-model="notesScope.auth.password"
+                    data-ng-required="notesScope.auth.password"
+                    data-ng-minlength="5">
+            </label>
+            <span class="validation-message"
+                data-ng-show="signUpForm.password.$invalid && signUpForm.email.$password">invlid password</span>
+
+            <label for="repeated-password">
+                Repeat password: *
+                <input type="password"
+                    id="repeated-password"
+                    name="repeatedPassword"
+                    data-ng-model="notesScope.auth.repeatedPassword"
+                    data-ng-minlength="5"
+                    data-ng-required="notesScope.auth.repeatedPassword"
+                    password-repeat>
+            </label>
+            <span class="validation-message"
+                data-ng-show="signUpForm.repeatedPassword.$invalid && signUpForm.repeatedPassword.$dirty">passwords don't match</span>
+
+            <br>
+            <div class="text-center">
+                <button>Sign up</button>
+            </div>
+        </form>
+    </div>
+</section>

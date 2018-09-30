@@ -1,0 +1,37 @@
+<br>
+<br>
+<section>
+    <div class="row">
+        <fieldset>
+            Add note:
+            <form action="#">
+                <textarea data-ng-model="notesScope.note"></textarea>
+                <button data-ng-click="ctrl.addNote()">Add note</button>
+            </form>
+        </fieldset>
+    </div>
+    <div class="row" data-ng-if="notesScope.notes.length">
+        <table>
+            <thead>
+                <tr>
+                    <th>Text</th>
+                    <th>Creation date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="note in notesScope.notes">
+                    <td>{{ note.text }}</td>
+                    <td>{{ note.date }}</td>
+                    <td>
+                        <button class="delete-button button button-small" data-ng-click="ctrl.removeNote(note.id)">&#10005;</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center" data-ng-if="!notesScope.notes.length">
+        You don't have notes :(
+    </div>
+</section>

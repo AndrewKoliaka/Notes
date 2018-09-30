@@ -1,0 +1,32 @@
+<section class="row">
+    <div class="column column-50 column-offset-25">
+        <h2 class="text-center">Login</h2>
+        <form name="loginForm"
+            data-ng-submit="ctrl.login($event)">
+            <label for="email">
+                Email:
+                <input type="email"
+                    id="email"
+                    name="email"
+                    data-ng-model="notesScope.auth.email"
+                    data-ng-required="notesScope.auth.email">
+            </label>
+            <span class="validation-message"
+                data-ng-show="loginForm.email.$invalid">invlid email</span>
+            <label for="password">
+                Password:
+                <input type="password"
+                    id="password"
+                    name="password"
+                    data-ng-minlength="3"
+                    data-ng-model="notesScope.auth.password"
+                    data-ng-required="notesScope.auth.password">
+            </label>
+            <span class="validation-message"
+                data-ng-show="loginForm.password.$invalid">invalid password</span>
+            <div class="text-center">
+                <button>Login</button>
+            </div>
+        </form>
+    </div>
+</section>

@@ -6,7 +6,8 @@
             Add note:
             <form action="#">
                 <textarea data-ng-model="notesScope.note"></textarea>
-                <button data-ng-click="ctrl.addNote()">Add note</button>
+                <button data-ng-if="!notesScope.noteToEdit" data-ng-click="ctrl.add()">Add note</button>
+                <button data-ng-if="notesScope.noteToEdit" data-ng-click="ctrl.update()">Update</button>
             </form>
         </fieldset>
     </div>
@@ -15,8 +16,8 @@
             <thead>
                 <tr>
                     <th>Text</th>
-                    <th>Creation date</th>
-                    <th>Action</th>
+                    <th>Date</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,7 +25,8 @@
                     <td>{{ note.text }}</td>
                     <td>{{ note.date }}</td>
                     <td>
-                        <button class="delete-button button button-small" data-ng-click="ctrl.removeNote(note.id)">&#10005;</button>
+                        <a class="button" data-ng-click="ctrl.remove(note.id)">Delete</a>
+                        <a class="button" data-ng-click="ctrl.edit(note.id)">Edit</a>
                     </td>
                 </tr>
             </tbody>

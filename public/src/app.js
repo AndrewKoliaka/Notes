@@ -5,15 +5,15 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 	$stateProvider
 		.state('login', {
 			url: '/login',
-			templateUrl: 'src/pages/login/login.html'
+			templateUrl: 'src/views/login/login.html'
 		})
 		.state('sign-up', {
 			url: '/sign-up',
-			templateUrl: 'src/pages/sign-up/sign-up.html'
+			templateUrl: 'src/views/sign-up/sign-up.html'
 		})
 		.state('notes', {
 			url: '/notes',
-			templateUrl: 'src/pages/notes/notes.html',
+			templateUrl: 'src/views/notes/notes.html',
 			onEnter($localStorage, $labels, $state, $timeout) {
 				if (!$localStorage.getItem($labels.IS_LOGGED)) {
 					$timeout(() => $state.go('login'));
@@ -60,17 +60,18 @@ app.controller('notes', function ($scope, $localStorage, $labels, $state) {
 				email: '',
 				password: '',
 				repeatedPassword: ''
-			}
+			},
+			noteToEdit: null
 		}
 
 		$scope.notesScope.auth.isLogged = $localStorage.getItem($labels.IS_LOGGED);
 	}
 
-	this.removeNote = id => {
+	this.remove = id => {
 		$scope.notesScope.notes = $scope.notesScope.notes.filter(note => note.id !== id);
 	}
 
-	this.addNote = () => {
+	this.add = () => {
 		if (!$scope.notesScope.note) return;
 
 		const note = {
@@ -80,6 +81,21 @@ app.controller('notes', function ($scope, $localStorage, $labels, $state) {
 		};
 
 		$scope.notesScope.notes.push(note);
+		$scope.notesScope.note = '';
+	}
+
+	this.edit = id => {
+		const noteToEdit = $scope.notesScope.notes.find(note => note.id === id);
+		if (noteToEdit) {
+			$scope.notesScope.noteToEdit = noteToEdit;
+			$scope.notesScope.note = noteToEdit.text;
+		}
+	}
+
+	this.update = () => {
+		$scope.notesScope.noteToEdit.text = $scope.notesScope.note;
+		$scope.notesScope.noteToEdit.date = new Date().toGMTString();
+		$scope.notesScope.noteToEdit = null;
 		$scope.notesScope.note = '';
 	}
 
@@ -96,12 +112,11 @@ app.controller('notes', function ($scope, $localStorage, $labels, $state) {
 
 	this.signUp = () => {
 		if (
-			$scope.notesScope.auth.name &&
 			$scope.notesScope.auth.email &&
 			$scope.notesScope.auth.password &&
 			$scope.notesScope.auth.repeatedPassword
 		) {
-			// Sign up logic
+			// Sign up logic goes here
 
 			this.login();
 			return true;

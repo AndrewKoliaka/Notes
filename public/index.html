@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
 	<link rel="stylesheet" href="styles.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.2/angular.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.7.4/angular-resource.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.20/angular-ui-router.js"></script>
 	<script src="src/app.js"></script>
 </head>
@@ -19,11 +20,11 @@
 		<header class="header">
 			<nav class="header__nav">
 				<h2 class="header__logo">Notes app</h2>
-				<span data-ng-if="!notesScope.auth.isLogged">
+				<span data-ng-if="!notesScope.loginData">
 					<a class="header__nav-item" ui-sref="login">Login</a>
 					<a class="header__nav-item" ui-sref="sign-up">Sign up</a>
 				</span>
-				<span data-ng-if="notesScope.auth.isLogged">
+				<span data-ng-if="notesScope.loginData">
 					<a class="header__nav-item" ui-sref="notes">Notes</a>
 					<a class="header__nav-item" href="#" data-ng-click="ctrl.signOut()">Sign out</a>
 				</span>

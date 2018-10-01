@@ -1,4 +1,4 @@
-const app = angular.module('notesApp', ['ui.router']);
+const app = angular.module('notesApp', ['ui.router', 'ngResource']);
 
 app.config(function ($stateProvider, $urlRouterProvider) {
 
@@ -15,19 +15,13 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 			url: '/notes',
 			templateUrl: 'src/views/notes/notes.html',
 			onEnter($localStorage, $labels, $state, $timeout) {
-				if (!$localStorage.getItem($labels.IS_LOGGED)) {
+				if (!$localStorage.getItem($labels.LOGIN)) {
 					$timeout(() => $state.go('login'));
 				}
 			}
 		});
 
 	$urlRouterProvider.otherwise('/notes');
-});
-
-app.service('$localStorage', function ($window) {
-	this.setItem = (key, value) => $window.localStorage.setItem(key, value);
-	this.getItem = key => $window.localStorage.getItem(key);
-	this.removeItem = key => $window.localStorage.removeItem(key);
 });
 
 app.directive('passwordRepeat', function () {
@@ -42,19 +36,39 @@ app.directive('passwordRepeat', function () {
 });
 
 app.constant('$labels', {
-	IS_LOGGED: 'notesAppLogin'
+	LOGIN: 'loginDataData'
 });
 
-app.controller('notes', function ($scope, $localStorage, $labels, $state) {
+app.constant('$api', {
+	login: '/api/login',
+	register: '/api/register',
+	getNotes: '/api/users/:id/notes',
+	postNote: '/api/notes',
+	updateNote: '/api/notes/:id',
+	deleteNote: '/api/notes/:id'
+});
+
+app.service('$localStorage', function ($window) {
+	this.setItem = (key, value) => $window.localStorage.setItem(key, JSON.stringify(value));
+	this.getItem = key => JSON.parse($window.localStorage.getItem(key));
+	this.removeItem = key => $window.localStorage.removeItem(key);
+});
+
+app.service('$data', function ($resource, $api) {
+	this.login = params => $resource($api.login).save(params).$promise;
+	this.register = params => $resource($api.register).save(params).$promise;
+	this.getNotes = id => $resource($api.getNotes, { id }).get().$promise;
+	this.postNote = params => $resource($api.postNote).save(params).$promise;
+	this.updateNote = (id, params) => $resource($api.updateNote, { id }).save(params).$promise;
+	this.deleteNote = id => $resource($api.deleteNote, { id }).delete().$promise;
+});
+
+app.controller('notes', function ($scope, $localStorage, $labels, $state, $data) {
 	this.$onInit = () => {
 
 		$scope.notesScope = {
 			note: '',
-			notes: [{
-				id: 1,
-				text: 'Hello',
-				date: new Date().toGMTString()
-			}],
+			notes: [],
 			auth: {
 				name: '',
 				email: '',
@@ -64,28 +78,52 @@ app.controller('notes', function ($scope, $localStorage, $labels, $state) {
 			noteToEdit: null
 		}
 
-		$scope.notesScope.auth.isLogged = $localStorage.getItem($labels.IS_LOGGED);
+		$scope.notesScope.loginData = $localStorage.getItem($labels.LOGIN);
+
+		$scope.$watch(() => $state.current.name, (name) => {
+			if (name === 'notes') {
+				this.getNotes();
+			}
+		});
+	}
+
+	this.getNotes = () => {
+		if ($scope.notesScope.loginData) {
+			const userId = $scope.notesScope.loginData.id
+
+			$data.getNotes(userId)
+				.then(res => {
+					$scope.notesScope.notes = res.notes;
+				 })
+				.catch(this.showErrorAlert);
+		}
 	}
 
 	this.remove = id => {
-		$scope.notesScope.notes = $scope.notesScope.notes.filter(note => note.id !== id);
+		$data.deleteNote(id)
+			.then(() => $scope.notesScope.notes = $scope.notesScope.notes.filter(note => note._id !== id))
+			.catch(this.showErrorAlert);
 	}
 
 	this.add = () => {
 		if (!$scope.notesScope.note) return;
 
 		const note = {
-			id: Date.now(),
+			userId: $scope.notesScope.loginData.id,
 			text: $scope.notesScope.note,
-			date: new Date().toGMTString()
+			date: new Date()
 		};
 
-		$scope.notesScope.notes.push(note);
-		$scope.notesScope.note = '';
+		$data.postNote(note)
+			.then(() => {
+				this.getNotes();
+				$scope.notesScope.note = '';
+			})
+			.catch(this.showErrorAlert);
 	}
 
 	this.edit = id => {
-		const noteToEdit = $scope.notesScope.notes.find(note => note.id === id);
+		const noteToEdit = $scope.notesScope.notes.find(note => note._id === id);
 		if (noteToEdit) {
 			$scope.notesScope.noteToEdit = noteToEdit;
 			$scope.notesScope.note = noteToEdit.text;
@@ -93,21 +131,33 @@ app.controller('notes', function ($scope, $localStorage, $labels, $state) {
 	}
 
 	this.update = () => {
-		$scope.notesScope.noteToEdit.text = $scope.notesScope.note;
-		$scope.notesScope.noteToEdit.date = new Date().toGMTString();
-		$scope.notesScope.noteToEdit = null;
-		$scope.notesScope.note = '';
+		const id = $scope.notesScope.noteToEdit._id;
+		const text = $scope.notesScope.note;
+
+		$data.updateNote(id, { text })
+			.then(() => {
+				this.getNotes();
+				$scope.notesScope.noteToEdit = null;
+				$scope.notesScope.note = '';
+			})
+			.catch(this.showErrorAlert);
 	}
 
 	this.login = () => {
 		if ($scope.notesScope.auth.email && $scope.notesScope.auth.password) {
-			$localStorage.setItem($labels.IS_LOGGED, true);
-			$scope.notesScope.auth.isLogged = true;
-			$state.go('notes');
-			return true;
+			$data.login($scope.notesScope.auth)
+				.then(res => {
+					const userData = {
+						id: res.id,
+						name: res.name,
+						email: res.email
+					}
+					$localStorage.setItem($labels.LOGIN, userData);
+					$scope.notesScope.loginData = userData;
+					$state.go('notes');
+				 })
+				.catch(this.showErrorAlert)
 		}
-
-		return false;
 	}
 
 	this.signUp = () => {
@@ -116,23 +166,31 @@ app.controller('notes', function ($scope, $localStorage, $labels, $state) {
 			$scope.notesScope.auth.password &&
 			$scope.notesScope.auth.repeatedPassword
 		) {
-			// Sign up logic goes here
-
-			this.login();
-			return true;
+			$data.register($scope.notesScope.auth)
+				.then(res => {
+					const userData = {
+						id: res.id,
+						name: res.name,
+						email: res.email
+					}
+					$localStorage.setItem($labels.LOGIN, userData);
+					$scope.notesScope.loginData = userData;
+					$state.go('notes');
+				})
+				.catch(this.showErrorAlert);
 		}
-
-		return false;
 	}
 
 	this.signOut = () => {
-		if ($localStorage.getItem($labels.IS_LOGGED)) {
-			$localStorage.removeItem($labels.IS_LOGGED);
-			$scope.notesScope.auth.isLogged = false;
+		if ($localStorage.getItem($labels.LOGIN)) {
+			$localStorage.removeItem($labels.LOGIN);
+			$scope.notesScope.loginData = null;
 			$state.go('login');
-			return true;
 		}
+	}
 
-		return false;
+	this.showErrorAlert = error => {
+		alert(`Something went wrong. ${error.data}`);
+		console.error(error);
 	}
 });

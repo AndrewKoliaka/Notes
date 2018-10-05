@@ -36,7 +36,7 @@ app.directive('passwordRepeat', function () {
 });
 
 app.constant('$labels', {
-	LOGIN: 'loginDataData'
+	LOGIN: 'notesAppLoginData'
 });
 
 app.constant('$api', {

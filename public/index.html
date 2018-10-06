@@ -13,20 +13,30 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.7.4/angular-resource.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.20/angular-ui-router.js"></script>
 	<script src="src/app.js"></script>
+	<script src="src/directives/passwordRepeat.directive.js"></script>
+	<script src="src/directives/spinner.directive.js"></script>
+	<script src="src/constants/labels.constant.js"></script>
+	<script src="src/constants/apiPaths.constant.js"></script>
+	<script src="src/services/localStorage.service.js"></script>
+	<script src="src/services/errorAlert.service.js"></script>
+	<script src="src/services/auth.service.js"></script>
+	<script src="src/services/data.service.js"></script>
+	<script src="src/controllers/notes.controller.js"></script>
+	<script src="src/controllers/auth.controller.js"></script>
 </head>
 
 <body>
-	<main class="container" data-ng-controller="notes as ctrl">
+	<main class="container" data-ng-controller="auth.controller as authCtrl">
 		<header class="header">
 			<nav class="header__nav">
 				<h2 class="header__logo">Notes app</h2>
-				<span data-ng-if="!notesScope.loginData">
+				<span data-ng-if="!auth.isLogged">
 					<a class="header__nav-item" ui-sref="login">Login</a>
 					<a class="header__nav-item" ui-sref="sign-up">Sign up</a>
 				</span>
-				<span data-ng-if="notesScope.loginData">
+				<span data-ng-if="auth.isLogged">
 					<a class="header__nav-item" ui-sref="notes">Notes</a>
-					<a class="header__nav-item" href="#" data-ng-click="ctrl.signOut()">Sign out</a>
+					<a class="header__nav-item" href="#" data-ng-click="authCtrl.signOut()">Sign out</a>
 				</span>
 			</nav>
 		</header>

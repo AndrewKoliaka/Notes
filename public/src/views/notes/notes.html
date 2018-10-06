@@ -6,12 +6,13 @@
             Add note:
             <form action="#">
                 <textarea data-ng-model="notesScope.note"></textarea>
-                <button data-ng-if="!notesScope.noteToEdit" data-ng-click="ctrl.add()">Add note</button>
-                <button data-ng-if="notesScope.noteToEdit" data-ng-click="ctrl.update()">Update</button>
+                <button data-ng-if="!notesScope.noteToEdit" data-ng-click="notesCtrl.add()">Add note</button>
+                <button data-ng-if="notesScope.noteToEdit" data-ng-click="notesCtrl.update()">Update</button>
             </form>
         </fieldset>
     </div>
-    <div class="row" data-ng-if="notesScope.notes.length">
+    <div data-spinner data-ng-show="notesScope.isSpinner"></div>
+    <div class="row" data-ng-show="notesScope.notes.length && !notesScope.isSpinner">
         <table>
             <thead>
                 <tr>
@@ -23,10 +24,10 @@
             <tbody>
                 <tr data-ng-repeat="note in notesScope.notes">
                     <td>{{ note.text }}</td>
-                    <td>{{ note.date }}</td>
+                    <td>{{ note.date | date : 'short' }}</td>
                     <td>
-                        <a class="button" data-ng-click="ctrl.remove(note._id)">Delete</a>
-                        <a class="button" data-ng-click="ctrl.edit(note._id)">Edit</a>
+                        <a class="button" data-ng-click="notesCtrl.remove(note._id)">Delete</a>
+                        <a class="button" data-ng-click="notesCtrl.edit(note._id)">Edit</a>
                     </td>
                 </tr>
             </tbody>

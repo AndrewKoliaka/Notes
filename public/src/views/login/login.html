@@ -2,14 +2,14 @@
     <div class="column column-50 column-offset-25">
         <h2 class="text-center">Login</h2>
         <form name="loginForm"
-            data-ng-submit="ctrl.login($event)">
+            data-ng-submit="authCtrl.login()">
             <label for="email">
                 Email:
                 <input type="email"
                     id="email"
                     name="email"
-                    data-ng-model="notesScope.auth.email"
-                    data-ng-required="notesScope.auth.email">
+                    data-ng-model="auth.data.email"
+                    data-ng-required="auth.data.email">
             </label>
             <span class="validation-message"
                 data-ng-show="loginForm.email.$invalid">invlid email</span>
@@ -19,15 +19,16 @@
                     id="password"
                     name="password"
                     data-ng-minlength="3"
-                    data-ng-model="notesScope.auth.password"
-                    data-ng-required="notesScope.auth.password">
+                    data-ng-model="auth.data.password"
+                    data-ng-required="auth.data.password">
             </label>
             <span class="validation-message"
                 data-ng-show="loginForm.password.$invalid">invalid password</span>
 
             <br>
             <div class="text-center">
-                <button>Login</button>
+                <button data-ng-disabled="loginForm.$invalid || auth.isSpinner">Login</button>
+                <div data-spinner data-ng-show="auth.isSpinner"></div>
             </div>
         </form>
     </div>

@@ -4,8 +4,10 @@
   "description": "Simple notes app implemented with AngularJS, NodeJS, Mongo",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "watch": "gulp"
+    "start": "gulp build && nodemon server.js",
+    "watch": "gulp",
+    "build": "gulp build",
+    "remove": "gulp del"
   },
   "repository": {
     "type": "git",

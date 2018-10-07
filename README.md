@@ -18,4 +18,4 @@ npm start
 
 ```npm run watch``` - starts devserver and auto-rebuilds the app after any changes in /src directory
 
-```npm run del``` - removes /bin directory
+```npm run remove``` - removes /bin directory

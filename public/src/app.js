@@ -5,15 +5,11 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 	$stateProvider
 		.state('login', {
 			url: '/login',
-			templateUrl: 'views/login/login.html',
-			controller: 'auth.controller',
-			controllerAs: 'authCtrl'
+			templateUrl: 'views/login/login.html'
 		})
 		.state('sign-up', {
 			url: '/sign-up',
-			templateUrl: 'views/sign-up/sign-up.html',
-			controller: 'auth.controller',
-			controllerAs: 'authCtrl'
+			templateUrl: 'views/sign-up/sign-up.html'
 		})
 		.state('notes', {
 			url: '/notes',

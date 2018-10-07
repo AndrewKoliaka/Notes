@@ -6,28 +6,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>AngularJS Notes</title>
-	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
-	<link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
-	<link rel="stylesheet" href="styles.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.2/angular.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.7.4/angular-resource.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.20/angular-ui-router.js"></script>
-	<script src="src/app.js"></script>
-	<script src="src/directives/passwordRepeat.directive.js"></script>
-	<script src="src/directives/spinner.directive.js"></script>
-	<script src="src/constants/labels.constant.js"></script>
-	<script src="src/constants/apiPaths.constant.js"></script>
-	<script src="src/services/localStorage.service.js"></script>
-	<script src="src/services/errorAlert.service.js"></script>
-	<script src="src/services/auth.service.js"></script>
-	<script src="src/services/data.service.js"></script>
-	<script src="src/controllers/notes.controller.js"></script>
-	<script src="src/controllers/auth.controller.js"></script>
+
+	<link rel="stylesheet" href="css/libs.css">
+	<link rel="stylesheet" href="css/styles.css">
+
+	<script src="js/libs.js"></script>
+	<script src="js/app.js"></script>
 </head>
 
 <body>
-	<main class="container" data-ng-controller="auth.controller as authCtrl">
-		<header class="header">
+	<main class="container">
+		<header class="header" data-ng-controller="auth.controller as authCtrl">
 			<nav class="header__nav">
 				<h2 class="header__logo">Notes app</h2>
 				<span data-ng-if="!auth.isLogged">
@@ -40,7 +29,7 @@
 				</span>
 			</nav>
 		</header>
-		<ui-view></ui-view>
+		<div ui-view></div>
 	</main>
 
 </body>

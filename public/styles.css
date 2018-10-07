@@ -1,4 +1,4 @@
-/* General styles */
+/* General */
 
 input {
     margin-bottom: 0;
@@ -18,7 +18,11 @@ label {
 }
 
 
-/* Header styles */
+/* Header */
+
+.header {
+    margin-bottom: 50px;
+}
 
 .header__logo {
     margin-bottom: 0;
@@ -43,17 +47,10 @@ label {
     border-top-color: #9b4dca;
     margin: 10px auto;
     animation: spin 1s ease-in-out infinite;
-    -webkit-animation: spin 1s ease-in-out infinite;
 }
 
 @keyframes spin {
     to {
-        -webkit-transform: rotate(360deg);
-    }
-}
-
-@-webkit-keyframes spin {
-    to {
-        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
 }

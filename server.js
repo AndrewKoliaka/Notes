@@ -50,8 +50,8 @@ router.post('/login', async (req, res) => {
 	({ email, password } = req.body);
 
 	try {
-		const user = await User.findOne({ email, password })
-		user ? res.status(200).json({ id: user.id }) : res.sendStatus(404);
+		const user = await User.findOne({ email, password });
+		user ? res.status(200).json({ id: user._id }) : res.sendStatus(404);
 	} catch (error) {
 		res.status(500).json(error);
 	}
@@ -62,9 +62,10 @@ router.post('/register', async (req, res) => {
 
 	try {
 		const existingUser = await User.findOne({ email });
-		if (existingUser) return res.sendStatus(409);
-		const createdUser = await User.create({ name, email, password });
-		res.status(200).json(createdUser);
+		if (existingUser) return res.status(409).send("User exists");
+		await User.create({ name, email, password });
+		const createdUser = await User.findOne({ email });
+		res.status(200).json({ id: createdUser._id });
 	} catch (error) {
 		res.status(500).json(error);
 	}
@@ -117,7 +118,7 @@ router.delete('/notes/:id', async (req, res) => {
 });
 
 // middlewares
-app.use(express.static('public'));
+app.use(express.static('bin'));
 app.use(bodyParser.json());
 app.use('/api', router);
 

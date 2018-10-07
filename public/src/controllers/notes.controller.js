@@ -8,19 +8,23 @@ app.controller('notes.controller', function ($scope, $data, $errorAlert, $authDa
 			isSpinner: false
 		};
 
-    this.getNotes();
+		this.getNotes();
 	}
 
 	this.getNotes = () => {
-    if (!$authData.isLogged()) return;
+		if (!$authData.isLogged()) return;
 
-    const userId = $authData.getUserData().id;
+		const userId = $authData.getUserData().id;
 
-    $scope.notesScope.isSpinner = true;
-    $data.getNotes(userId)
-      .then(res => { $scope.notesScope.notes = res.notes; })
-      .catch($errorAlert.show)
-      .finally(() => { $scope.notesScope.isSpinner = false; });
+		$scope.notesScope.isSpinner = true;
+		$data.getNotes(userId)
+			.then(res => {
+				$scope.notesScope.notes = res.notes;
+			})
+			.catch($errorAlert.show)
+			.finally(() => {
+				$scope.notesScope.isSpinner = false;
+			});
 	}
 
 	this.remove = id => {
@@ -47,7 +51,7 @@ app.controller('notes.controller', function ($scope, $data, $errorAlert, $authDa
 	}
 
 	this.edit = id => {
-    const noteToEdit = $scope.notesScope.notes.find(note => note._id === id);
+		const noteToEdit = $scope.notesScope.notes.find(note => note._id === id);
 
 		if (noteToEdit) {
 			$scope.notesScope.noteToEdit = noteToEdit;
@@ -59,7 +63,9 @@ app.controller('notes.controller', function ($scope, $data, $errorAlert, $authDa
 		const id = $scope.notesScope.noteToEdit._id;
 		const text = $scope.notesScope.note;
 
-		$data.updateNote(id, { text })
+		$data.updateNote(id, {
+				text
+			})
 			.then(() => {
 				this.getNotes();
 				$scope.notesScope.noteToEdit = null;
@@ -67,6 +73,4 @@ app.controller('notes.controller', function ($scope, $data, $errorAlert, $authDa
 			})
 			.catch($errorAlert.show);
 	}
-
-
 });
